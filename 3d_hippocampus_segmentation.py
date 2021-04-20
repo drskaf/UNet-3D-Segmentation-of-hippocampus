@@ -158,7 +158,7 @@ def LoadHippocampusData(root_dir, y_shape, z_shape):
         
         image = asarray(image)
         image = image.astype('float32')
-        image /=255
+        image /=255.0
 
         # We need to reshape data since CNN tensors that represent minibatches
         # in our case will be stacks of slices and stacks need to be of the same size.
@@ -218,7 +218,8 @@ class SlicesDataset(Dataset):
         # You could implement caching strategy here if dataset is too large to fit
         # in memory entirely
         # Also this would be the place to call transforms if data augmentation is used
-        
+        # in memory entirely
+
         # TASK: Create two new keys in the "sample" dictionary, named "image" and "seg"
         # The values are 3D Torch Tensors with image and label data respectively. 
         # First dimension is size 1, and last two hold the voxel data from the respective
@@ -231,8 +232,8 @@ class SlicesDataset(Dataset):
         # dimension to a Numpy array
         # <YOUR CODE GOES HERE>
         
-        sample["image"] = slc.arr[None, image.shape[1], image.shape[2]]
-        sample["seg"] = slc.arr[None, label.shape[1], label.shape[2]]
+        sample["imag"] = self.data[slc,image.shape[1], image.shape[2]][None,:]
+        sample["seg"] = self.data[slc,label.shape[1], label.shape[2]][None,:]
 
 
         return sample
@@ -595,8 +596,8 @@ class UNetExperiment:
             # shape [BATCH_SIZE, 1, PATCH_SIZE, PATCH_SIZE] into variables data and target. 
             # Feed data to the model and feed target to the loss function
             # 
-            data = [config.batch_size, 1, i["image"].shape[1], i["image"].shape[2]]
-            target = [config.batch_size, 1, i["seg"].shape[1], i["seg"].shape[2]]
+            data = torch.from_numpy(batch["image"]).unsqueeze(0).unsqueeze(0).to(device)
+            target = torch.from_numpy(batch["seg"]). unsqueeze(0).unsqueeze(0).to(device)
                                                           
             prediction = self.model(data)
 
@@ -607,7 +608,7 @@ class UNetExperiment:
             loss = self.loss_function(prediction, target[:, 0, :, :])
 
             # TASK: What does each dimension of variable prediction represent?
-            # ANSWER: [batch_size, slice, y dimension, z dimention]
+            # ANSWER: [batch_size, channel, y dimension, z dimention]
 
             loss.backward()
             self.optimizer.step()
@@ -653,8 +654,8 @@ class UNetExperiment:
                 # TASK: Write validation code that will compute loss on a validation sample
                 # <YOUR CODE HERE>
 
-                data = [config.batch_size, 1, i["image"].shape[1], i["image"].shape[2]]
-                target = [config.batch_size, 1, i["seg"].shape[1], i["seg"].shape[2]]
+                data = torch.from_numpy(batch["image"]).unsqueeze(0).unsqueeze(0).to(device)
+                target = torch.from_numpy(batch["seg"]).unsqueeze(0).unsqueeze(0).to(device)
                                                           
                 prediction = self.model(data)
 
@@ -796,6 +797,7 @@ This file contains code that will kick off training and testing processes
 """
 import os
 import json
+import random
 
 
 class Config:
@@ -841,13 +843,14 @@ if __name__ == "__main__":
     # and testing respectively.
     # <YOUR CODE GOES HERE>
 
+    
     np.random.seed(42)
     
     length = len(data)
     new_index = np.random.permutation(length)
     
     train_val_index = new_index[:int(length*0.8)]
-    train_index = train_val_index[:int(length*0.8)]
+    train_index = new_index[:int(length*0.6)]
     val_index = list(set(train_val_index) - set(train_index))
     test_index = list(set(new_index) - set(train_val_index))
   
