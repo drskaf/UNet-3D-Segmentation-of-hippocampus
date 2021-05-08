@@ -2,6 +2,7 @@
 Contains various functions for computing statistics over 3D volumes
 """
 import numpy as np
+from numpy import asarray
 
 def Dice3d(a, b):
     """
@@ -16,6 +17,9 @@ def Dice3d(a, b):
     Returns:
         float
     """
+    a = asarray(a)
+    b = asarray(b)
+    
     if len(a.shape) != 3 or len(b.shape) != 3:
         raise Exception(f"Expecting 3 dimensional inputs, got {a.shape} and {b.shape}")
 
@@ -24,14 +28,11 @@ def Dice3d(a, b):
 
     # TASK: Write implementation of Dice3D. If you completed exercises in the lessons
     # you should already have it.
-    # <YOUR CODE HERE>
     
-    intersection = np.sum(a*b)
-    volumes = np.sum(a) + np.sum(b)
-
+    intersection = np.logical_and(a, b).sum()
+    volumes = np.sum(a>0) + np.sum(b>0)
     if volumes == 0:
         return -1
-
     return 2.*float(intersection) / float(volumes)
     
     
@@ -50,6 +51,9 @@ def Jaccard3d(a, b):
     Returns:
         float
     """
+    a = asarray(a)
+    b = asarray(b)
+    
     if len(a.shape) != 3 or len(b.shape) != 3:
         raise Exception(f"Expecting 3 dimensional inputs, got {a.shape} and {b.shape}")
 
@@ -58,14 +62,14 @@ def Jaccard3d(a, b):
 
     # TASK: Write implementation of Jaccard similarity coefficient. Please do not use 
     # the Dice3D function from above to do the computation ;)
-    # <YOUR CODE GOES HERE>
     
-    intersection = np.sum(a*b)
-    union = (np.sum(a) + np.sum(b)) - intersection
+    intersection = np.logical_and(a, b).sum() 
+    union = np.logical_or(a, b).sum()
     
-    if volumes == 0:
+    if union == 0:
         return -1
     
-    return 2.*float(intersection) / float(union)
+    return float(intersection) / float(union)
+    
 
-    return #
+    #return 
