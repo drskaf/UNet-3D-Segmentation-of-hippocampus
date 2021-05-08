@@ -6,19 +6,20 @@ import json
 
 from experiments.UNetExperiment import UNetExperiment
 from data_prep.HippocampusDatasetLoader import LoadHippocampusData
+import numpy as np
 
 class Config:
     """
     Holds configuration parameters
     """
     def __init__(self):
-        self.name = "Basic_unet"
-        self.root_dir = r"YOUR DIRECTORY HERE"
+        self.name = "3D_hippocampus"
+        self.root_dir = r"/home/workspace"
         self.n_epochs = 10
         self.learning_rate = 0.0002
         self.batch_size = 8
         self.patch_size = 64
-        self.test_results_dir = "RESULTS GO HERE"
+        self.test_results_dir = "/home/workspace"
 
 if __name__ == "__main__":
     # Get configuration
@@ -48,21 +49,12 @@ if __name__ == "__main__":
     # TASK: create three keys in the dictionary: "train", "val" and "test". In each key, store
     # the array with indices of training volumes to be used for training, validation 
     # and testing respectively.
-    # <YOUR CODE GOES HERE>
     
-    np.random.seed(42)
-    
-    length = len(data)
-    new_index = np.random.permutation(length)
-    
-    train_val_index = new_index[:int(length*0.8)]
-    train_index = new_index[:int(length*0.6)]
-    val_index = list(set(train_val_index) - set(train_index))
-    test_index = list(set(new_index) - set(train_val_index))
-  
-    split["train"] = {key: [value[i] for i in train_index] for key, value in split.items()}
-    split["val"] = {key: [value[i] for i in val_index] for key, value in split.items()}
-    split["test"] = {key: [value[i] for i in test_index] for key , value in split.items()}
+    train, validate, test = np.split(keys,[int(len(keys)*0.6),int(len(keys)*0.8)])
+    split["train"] = np.array(train)
+    split["val"] = np.array(validate)
+    split["test"] = np.array(test)
+
 
     # Set up and run experiment
     
