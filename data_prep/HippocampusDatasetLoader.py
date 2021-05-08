@@ -6,7 +6,10 @@ from os import listdir
 from os.path import isfile, join
 
 import numpy as np
+from numpy import asarray
 from medpy.io import load
+
+
 
 from utils.utils import med_reshape
 
@@ -23,8 +26,8 @@ def LoadHippocampusData(root_dir, y_shape, z_shape):
         Numpy arrays of shape [AXIAL_WIDTH, Y_SHAPE, Z_SHAPE]
     '''
 
-    image_dir = os.path.join(root_dir, 'images')
-    label_dir = os.path.join(root_dir, 'labels')
+    image_dir = os.path.join(root_dir, 'Images')
+    label_dir = os.path.join(root_dir, 'Labels')
 
     images = [f for f in listdir(image_dir) if (
         isfile(join(image_dir, f)) and f[0] != ".")]
@@ -39,7 +42,6 @@ def LoadHippocampusData(root_dir, y_shape, z_shape):
         label, _ = load(os.path.join(label_dir, f))
 
         # TASK: normalize all images (but not labels) so that values are in [0..1] range
-        # <YOUR CODE GOES HERE>
         
         image = asarray(image)
         image = image.astype('float32')
@@ -57,7 +59,7 @@ def LoadHippocampusData(root_dir, y_shape, z_shape):
         label = med_reshape(label, new_shape=(label.shape[0], y_shape, z_shape)).astype(int)
 
         # TASK: Why do we need to cast label to int?
-        # ANSWER: 
+        # ANSWER: required for model training
 
         out.append({"image": image, "seg": label, "filename": f})
 
