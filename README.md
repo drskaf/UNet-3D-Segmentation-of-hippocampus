@@ -20,7 +20,7 @@ Fortunately you won't have to deal with full heads of patients. Our (fictional) 
 
 You will use the dataset that contains the segmentations of the right hippocampus and you will use the U-Net architecture to build the segmentation model.
 
-After that, you will proceed to integrate the model into a working clinical PACS such that it runs on every incoming study and produces a report with volume measurements. The inference_dcm.py file will help you to integrate your final model into workflow, but will need terminal integration and DICOM network listener/send_volume/send_result codes which can be obtained in collaboration with your local IT team.
+After that, you will proceed to integrate the model into a working clinical PACS such that it runs on every incoming study and produces a report with volume measurements. The inference_dcm.py file will help you to achieve that, but you will need terminal commands and DICOM network which can be obtained in collaboration with your local IT team.
 
 # The Dataset
 We are using the "Hippocampus" dataset from the Medical Decathlon competition. This dataset is stored as a collection of NIFTI files, with one file per volume, and one file per corresponding segmentation mask. The original images here are T2 MRI scans of the full brain. As noted, in this dataset we are using cropped volumes where only the region around the hippocampus has been cut out. This makes the size of our dataset quite a bit smaller, our machine learning problem a bit simpler and allows us to have reasonable training times. You should not think of it as "toy" problem, though. Algorithms that crop rectangular regions of interest are quite common in medical imaging. Segmentation is still hard.
