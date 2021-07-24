@@ -19,7 +19,7 @@
 # recursive implementation of Unet
 import torch
 
-from torch import nn
+from torch import nn         
 
 class UNet(nn.Module):
     def __init__(self, num_classes=3, in_channels=1, initial_filter_size=64, kernel_size=3, num_downs=4, norm_layer=nn.InstanceNorm2d):
@@ -106,7 +106,7 @@ class UnetSkipConnectionBlock(nn.Module):
         return layer[:, :, xy1:(xy1 + target_width), xy2:(xy2 + target_height)]
 
     def forward(self, x):
-        if self.outermost:
+        if self.outermost:    
             return self.model(x)
         else:
             crop = self.center_crop(self.model(x), x.size()[2], x.size()[3])
