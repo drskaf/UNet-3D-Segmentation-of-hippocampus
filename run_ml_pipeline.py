@@ -21,7 +21,7 @@ class Config:
         self.patch_size = 64
         self.test_results_dir = "/home/workspace"
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     # Get configuration
 
     # TASK: Fill in parameters of the Config class and specify directory where the data is stored and 
