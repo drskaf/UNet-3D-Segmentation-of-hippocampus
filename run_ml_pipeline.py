@@ -68,10 +68,10 @@ if __name__ == "__main__":
     # run training
     exp.run()
 
-    # prep and run testing
+    # prep and run testing   
 
     # TASK: Test method is not complete. Go to the method and complete it
-    results_json = exp.run_test()
+    results_json = exp.run_test()  
 
     results_json["config"] = vars(c)
 
