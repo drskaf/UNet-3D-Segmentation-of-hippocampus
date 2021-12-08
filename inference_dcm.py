@@ -43,7 +43,7 @@ def load_dicom_volume_as_numpy_from_list(dcmlist):
     slices = [np.flip(dcm.pixel_array).T for dcm in sorted(dcmlist, key=lambda dcm: dcm.InstanceNumber)]
 
     # Make sure that you have correctly constructed the volume from your axial slices!
-    hdr = dcmlist[0]
+    hdr = dcmlist[0]  
 
     # We return header so that we can inspect metadata properly.
     # Since for our purposes we are interested in "Series" header, we grab header of the
