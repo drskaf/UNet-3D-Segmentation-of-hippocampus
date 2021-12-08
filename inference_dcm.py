@@ -139,7 +139,7 @@ def create_report(inference, header, orig_vol, pred_vol):
     pred1 = np.flip((pred_vol[20, :, :]/np.max(pred_vol[20, :, :]))*0xff).T.astype(np.uint8)
     pil_m1 = Image.fromarray(pred1, mode="L").convert("RGBA").resize(size=(400,400))
     data = np.array(pil_m1)
-    red, green, blue, alpha = data.T  
+    red, green, blue, alpha = data.T     
     white_areas = (red == 255) & (blue == 255) & (green == 255)
     data[..., :-1][white_areas.T] = (255, 0, 0)
     pil_m1 = Image.fromarray(data)
