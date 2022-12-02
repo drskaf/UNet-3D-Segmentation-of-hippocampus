@@ -19,7 +19,7 @@
 # recursive implementation of Unet
 import torch
 
-from torch import nn         
+from torch import nn           
 
 class UNet(nn.Module):
     def __init__(self, num_classes=3, in_channels=1, initial_filter_size=64, kernel_size=3, num_downs=4, norm_layer=nn.InstanceNorm2d):
